@@ -19,13 +19,13 @@ A lightweight RAG (Retrieval-Augmented Generation) system with an agentic workfl
 ### Prerequisites
 
 - Python >=3.10
-    - for Windows users: Use [Software on Demand](https://btondemand.pfizer.com/software) or [Python](https://www.python.org/downloads/) to downloda 
+    - for Windows users: Use [Software on Demand](https://btondemand.pfizer.com/software) or [Python](https://www.python.org/downloads/) to downloda
     - for Macos users:
     ```
     brew install python@3.11
     ```
 - [Ollama](https://ollama.ai/) for embeddings and LLM (recommended)
-- Docker & Docker Compose (optional, for containerized deployment)
+- [Docker](https://docs.docker.com/engine/install/) (optional, for containerized deployment, will need Docker Engine for docker compose)
 
 ### 1. Clone the Repository
 
@@ -65,15 +65,7 @@ cp .env.example .env
 
 Below the instructions on how to install and start ollama on your local machine (required for the application)
 
-- for **Macos** users:
-  ```
-  brew install ollama
-  ollama serve
-  ollama pull nomic-embed-text
-  ollama pull llama3.2
-  ```
-
-- for **Windows** users: Download from [ollama.ai](https://ollama.ai/), then:
+- Download from [Ollama](https://ollama.ai/), then:
   ```
   ollama serve
   ollama pull nomic-embed-text
@@ -289,6 +281,10 @@ mini-rag query "What is the structure of a clinical study report according to IC
 
 - Generate HTML coverage report: ```pytest --cov-report=html```
 
+- If you want to see report on web:
+    - for Macos: ```open htmlcov/index.html```
+    - for Windows: ```start htmlcov/index.html```
+
 
 ---
 
@@ -385,3 +381,7 @@ pre-commit install
     - git commit -m "Your commit message" --no-verify
 
 ---
+
+## Troubleshooting
+
+#### For Windows users
