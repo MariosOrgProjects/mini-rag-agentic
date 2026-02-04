@@ -384,4 +384,27 @@ pre-commit install
 
 ## Troubleshooting
 
-#### For Windows users
+#### General Issues
+
+1. LLM Timeout Error
+    ```
+    ERROR - LLM generation failed: LLM request timeout after 120s (llama3.2)
+    ```
+
+    **Cause:** This can casued by issue with LLM service usage.
+
+    **Fix:** Increase the timeout in your `.env` file:
+    ```
+    MINI_RAG_LLM_TIMEOUT=300
+    ```
+
+    Or use a smaller, faster model:
+    ```powershell
+    ollama pull llama3.2:1b
+    ```
+    Then update `.env`:
+    ```
+    MINI_RAG_LLM_MODEL=llama3.2:1b
+    ```
+
+---
