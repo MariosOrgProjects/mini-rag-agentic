@@ -88,7 +88,10 @@ class DocumentProcessor:
             raise MiniRAGError(f"Not a directory: {directory}")
 
         documents = []
-        pdf_files = list(directory.glob("*.pdf")) + list(directory.glob("*.PDF"))
+        # Use case-insensitive matching that works on both Windows and Unix
+        # On Windows, glob is case-insensitive so *.pdf matches *.PDF
+        # On Unix/macOS, we need to check both patterns
+        pdf_files = set(directory.glob("*.pdf")) | set(directory.glob("*.PDF"))
 
         if not pdf_files:
             raise MiniRAGError(f"No PDF files found in: {directory}")

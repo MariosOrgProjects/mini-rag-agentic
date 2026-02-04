@@ -19,7 +19,7 @@ A lightweight RAG (Retrieval-Augmented Generation) system with an agentic workfl
 ### Prerequisites
 
 - Python >=3.10
-    - for Windows users: Use [Software on Demand](https://btondemand.pfizer.com/software) to downloda
+    - for Windows users: Use [Software on Demand](https://btondemand.pfizer.com/software) or [Python](https://www.python.org/downloads/) to downloda 
     - for Macos users:
     ```
     brew install python@3.11
@@ -42,23 +42,20 @@ cd mini-rag-agentic
 ### 3. Set Up Python Environment
 
 - for **Macos** users:
-  ```bash
-  python -m venv venv
-  source venv/bin/activate
-  pip install -e ".[dev]"
-  ```
+    1. ```python -m venv venv```
+    2. ```source venv/bin/activate```
+    3. ```pip install -e ".[dev]"```
 
 - for **Windows** users:
-  ```powershell
-  python -m venv venv
-  .\venv\Scripts\Activate
-  pip install -e ".[dev]"
-  ```
+    1. ```python -m venv venv```
+    2. ```source venv/Scripts/activate```
+    3. ```pip install -e ".[dev]"```
 
 
 ### 4. Configure Environment Variables
 
 Copy the example environment file and adjust as needed:
+
 
 ```bash
 cp .env.example .env

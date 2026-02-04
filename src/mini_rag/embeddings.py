@@ -17,38 +17,17 @@ class BaseEmbedding(ABC):
 
     @abstractmethod
     def embed_text(self, text: str) -> NDArray[np.float32]:
-        """Embed a single text.
-
-        Args:
-            text: Text to embed.
-
-        Returns:
-            Embedding vector as numpy array.
-        """
+        """Embed a single text."""
         pass
 
     @abstractmethod
     def embed_texts(self, texts: list[str]) -> NDArray[np.float32]:
-        """Embed multiple texts.
-
-        Args:
-            texts: List of texts to embed.
-
-        Returns:
-            2D array of embedding vectors.
-        """
+        """Embed multiple texts."""
         pass
 
     @abstractmethod
     def embed_chunks(self, chunks: list[DocumentChunk]) -> NDArray[np.float32]:
-        """Embed document chunks.
-
-        Args:
-            chunks: List of document chunks.
-
-        Returns:
-            2D array of embedding vectors.
-        """
+        """Embed document chunks."""
         pass
 
 
@@ -79,17 +58,8 @@ class OllamaEmbedding(BaseEmbedding):
             return False
 
     def embed_text(self, text: str) -> NDArray[np.float32]:
-        """Embed a single text using Ollama.
+        """Embed a single text using Ollama."""
 
-        Args:
-            text: Text to embed.
-
-        Returns:
-            Embedding vector.
-
-        Raises:
-            MiniRAGError: If embedding fails.
-        """
         if not text.strip():
             raise MiniRAGError("Cannot embed empty text", "ollama")
 
@@ -116,14 +86,8 @@ class OllamaEmbedding(BaseEmbedding):
             raise MiniRAGError(f"Invalid response from Ollama: {e}", "ollama") from e
 
     def embed_texts(self, texts: list[str]) -> NDArray[np.float32]:
-        """Embed multiple texts.
+        """Embed multiple texts."""
 
-        Args:
-            texts: List of texts to embed.
-
-        Returns:
-            2D array of embedding vectors.
-        """
         if not texts:
             raise MiniRAGError("Cannot embed empty list of texts", "ollama")
 
@@ -135,14 +99,8 @@ class OllamaEmbedding(BaseEmbedding):
         return np.vstack(embeddings)
 
     def embed_chunks(self, chunks: list[DocumentChunk]) -> NDArray[np.float32]:
-        """Embed document chunks.
+        """Embed document chunks."""
 
-        Args:
-            chunks: List of document chunks.
-
-        Returns:
-            2D array of embedding vectors.
-        """
         texts = [chunk.content for chunk in chunks]
         return self.embed_texts(texts)
 
@@ -151,11 +109,8 @@ class TfidfEmbedding(BaseEmbedding):
     """TF-IDF based embedding as fallback."""
 
     def __init__(self, settings: Settings | None = None):
-        """Initialize TF-IDF embedding.
+        """Initialize TF-IDF embedding."""
 
-        Args:
-            settings: Application settings (unused, for interface compatibility).
-        """
         self.vectorizer: TfidfVectorizer | None = None
         self._is_fitted = False
         self._corpus_texts: list[str] = []
@@ -196,14 +151,8 @@ class TfidfEmbedding(BaseEmbedding):
         self._is_fitted = True
 
     def embed_text(self, text: str) -> NDArray[np.float32]:
-        """Embed a single text.
+        """Embed a single text."""
 
-        Args:
-            text: Text to embed.
-
-        Returns:
-            Embedding vector.
-        """
         if not self._is_fitted or self.vectorizer is None:
             raise MiniRAGError(
                 "TF-IDF vectorizer not fitted. Call fit() first.", "tfidf"
@@ -216,14 +165,8 @@ class TfidfEmbedding(BaseEmbedding):
         return vector.astype(np.float32)
 
     def embed_texts(self, texts: list[str]) -> NDArray[np.float32]:
-        """Embed multiple texts.
+        """Embed multiple texts."""
 
-        Args:
-            texts: List of texts to embed.
-
-        Returns:
-            2D array of embedding vectors.
-        """
         if not self._is_fitted or self.vectorizer is None:
             raise MiniRAGError(
                 "TF-IDF vectorizer not fitted. Call fit() first.", "tfidf"
@@ -236,14 +179,8 @@ class TfidfEmbedding(BaseEmbedding):
         return vectors.astype(np.float32)
 
     def embed_chunks(self, chunks: list[DocumentChunk]) -> NDArray[np.float32]:
-        """Embed document chunks.
+        """Embed document chunks."""
 
-        Args:
-            chunks: List of document chunks.
-
-        Returns:
-            2D array of embedding vectors.
-        """
         texts = [chunk.content for chunk in chunks]
 
         # Auto-fit if not fitted
@@ -283,14 +220,8 @@ class EmbeddingService:
         return self._tfidf
 
     def get_backend(self) -> BaseEmbedding:
-        """Get the active embedding backend.
+        """Get the active embedding backend."""
 
-        Returns:
-            Active embedding backend.
-
-        Raises:
-            MiniRAGError: If no backend is available.
-        """
         # Try preferred backend first
         if self.settings.embedding_backend == "ollama":
             ollama = self._init_ollama()
@@ -312,25 +243,13 @@ class EmbeddingService:
         return self._active_backend or "unknown"
 
     def embed_text(self, text: str) -> NDArray[np.float32]:
-        """Embed a single text.
+        """Embed a single text."""
 
-        Args:
-            text: Text to embed.
-
-        Returns:
-            Embedding vector.
-        """
         return self.get_backend().embed_text(text)
 
     def embed_texts(self, texts: list[str]) -> NDArray[np.float32]:
-        """Embed multiple texts.
+        """Embed multiple texts."""
 
-        Args:
-            texts: List of texts to embed.
-
-        Returns:
-            2D array of embedding vectors.
-        """
         return self.get_backend().embed_texts(texts)
 
     def embed_chunks(self, chunks: list[DocumentChunk]) -> NDArray[np.float32]:
