@@ -83,7 +83,7 @@ Below the instructions on how to install and start ollama on your local machine 
   ollama pull llama3.2
   ```
 
-**Note:** 
+**Note:**
 - When you properly install ollama then there is a command: ```ollama --help``` that shows all the options for ollama.
 - To properly install ollama make sure that you are not connected to VPN
 - If Ollama is unavailable, the system automatically falls back to TF-IDF embeddings and simple text extraction.
@@ -382,7 +382,7 @@ pre-commit install
 | `pre-commit autoupdate` | Update hooks to latest versions |
 
 
-**Note:** 
+**Note:**
 - Pre-commit hooks run automatically on `git commit`. If any hook fails, the commit is aborted and you must fix the issues before committing again.
 - To skip pre-commit hooks for a specific commit, use:
     - git commit -m "Your commit message" --no-verify
