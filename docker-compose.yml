@@ -1,0 +1,66 @@
+services:
+  # Main application - Mini RAG CLI
+  main-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mini-rag-app
+    env_file:
+      - .env
+    environment:
+      # Override paths for container
+      MINI_RAG_CORPUS_DIR: /app/corpus
+      MINI_RAG_LOG_DIR: /app/logs
+      MINI_RAG_VECTORSTORE_PATH: /app/vectorstore
+      # Ollama connection (requires Ollama running on host)
+      MINI_RAG_OLLAMA_BASE_URL: http://host.docker.internal:11434
+      # Use values from .env file
+      MINI_RAG_CHUNK_SIZE: ${MINI_RAG_CHUNK_SIZE}
+      MINI_RAG_CHUNK_OVERLAP: ${MINI_RAG_CHUNK_OVERLAP}
+      MINI_RAG_EMBEDDING_BACKEND: ${MINI_RAG_EMBEDDING_BACKEND}
+      MINI_RAG_OLLAMA_MODEL: ${MINI_RAG_OLLAMA_MODEL}
+      MINI_RAG_OLLAMA_TIMEOUT: ${MINI_RAG_OLLAMA_TIMEOUT}
+      MINI_RAG_TOP_K: ${MINI_RAG_TOP_K}
+      MINI_RAG_SIMILARITY_THRESHOLD: ${MINI_RAG_SIMILARITY_THRESHOLD}
+      MINI_RAG_LLM_MODEL: ${MINI_RAG_LLM_MODEL}
+      MINI_RAG_LLM_TIMEOUT: ${MINI_RAG_LLM_TIMEOUT}
+      MINI_RAG_MAX_TOKENS: ${MINI_RAG_MAX_TOKENS}
+      MINI_RAG_LOG_LEVEL: ${MINI_RAG_LOG_LEVEL}
+      PYTHONUNBUFFERED: 1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./corpus:/app/corpus:ro
+      - ./logs:/app/logs
+      - ./vectorstore:/app/vectorstore
+
+  # Test runner - runs tests and generates coverage report
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: mini-rag-test
+    env_file:
+      - .env
+    environment:
+      # Override paths for container
+      MINI_RAG_CORPUS_DIR: /app/corpus
+      MINI_RAG_LOG_DIR: /app/logs
+      MINI_RAG_VECTORSTORE_PATH: /app/vectorstore
+      # Test-specific overrides
+      MINI_RAG_CHUNK_SIZE: 200
+      MINI_RAG_CHUNK_OVERLAP: 20
+      MINI_RAG_EMBEDDING_BACKEND: tfidf
+      # Use values from .env file
+      MINI_RAG_OLLAMA_BASE_URL: ${MINI_RAG_OLLAMA_BASE_URL}
+      MINI_RAG_OLLAMA_MODEL: ${MINI_RAG_OLLAMA_MODEL}
+      MINI_RAG_OLLAMA_TIMEOUT: ${MINI_RAG_OLLAMA_TIMEOUT}
+      MINI_RAG_TOP_K: ${MINI_RAG_TOP_K}
+      MINI_RAG_SIMILARITY_THRESHOLD: ${MINI_RAG_SIMILARITY_THRESHOLD}
+      MINI_RAG_LLM_MODEL: ${MINI_RAG_LLM_MODEL}
+      MINI_RAG_LLM_TIMEOUT: ${MINI_RAG_LLM_TIMEOUT}
+      MINI_RAG_MAX_TOKENS: ${MINI_RAG_MAX_TOKENS}
+      MINI_RAG_LOG_LEVEL: ${MINI_RAG_LOG_LEVEL}
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ./coverage_report:/app/coverage_report
